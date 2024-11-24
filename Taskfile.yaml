@@ -1,0 +1,17 @@
+version: '3'
+
+tasks:
+  default:
+    - task: build
+    - task: run
+
+  build:
+    desc: "build docker image with name bot"
+    cmds:
+      - docker build -t bot .
+
+  run:
+    desc: "run docker image with name \"bot\""
+    cmds:
+      - docker run --rm --env-file .env bot
+
