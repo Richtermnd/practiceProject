@@ -36,11 +36,18 @@ class Logger:
         return f"{msg}\n{json.dumps(kwargs | self.attrs, indent=2)}"
 
 
+_logger_map = {}
+
+
 def get_logger(name: str, level=logging.DEBUG):
-    logger = logging.getLogger(name)
-    logger.setLevel(level)
-    handler = logging.StreamHandler(sys.stdout)
-    handler.setLevel(level)
-    handler.setFormatter(logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s"))
-    logger.addHandler(handler)
-    return Logger(logger)
+    if name not in _logger_map:
+        log = logging.getLogger(name)
+        log.setLevel(level)
+        handler = logging.StreamHandler(sys.stdout)
+        handler.setLevel(level)
+        handler.setFormatter(logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s"))
+        log.addHandler(handler)
+        logger = Logger(log)
+    else:
+        logger = _logger_map[name]
+    return logger
